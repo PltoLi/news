@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/style.css" rel="stylesheet">
+    <script>
+        window.onload = function () {
+            do_register = function () {
+                var http = new XMLHttpRequest();
+                var url = "http://mobile.platoplatform.com/app/account/register";
+                var params = "email=" + document.login.inputEmail3.value + "&password=" + document.login.inputPassword3.value + "&confirm=" + document.login.inputPassword4.value;
+                http.open("POST", url, true);
+                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                http.onreadystatechange = function() {//Call a function when the state changes.
+                    if(http.readyState == 4 && http.status == 200) {
+                        alert(http.responseText);
+                        var jsonResponse = JSON.parse(http.responseText);
+                        alert(jsonResponse.message);
+                    }
+                };
+                http.send(params);
+            };
+
+
+        }
+    </script>
+</head>
+<body>
+<div class="row"><img src="images/Plato-Ed-logo.png" class=" Plato-logo"><a href="login.html" class="logo_span">go Login</a></div>
+<form class="form-horizontal" name="login">
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" id="inputEmail3" name="inputEmail3" placeholder="Email">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="inputPassword3" name="inputPassword3" placeholder="Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword4" class="col-sm-2 control-label">Retype Password</label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="inputPassword4" name="inputPassword4" placeholder="Retype Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2"></label>
+        <p  class="col-sm-10">I agree to the following <strong>Terms&Conditions</strong><br><input type="checkbox"></p>
+        <label class="col-sm-2"></label>
+        <div class="Register-content col-sm-10">
+            <strong>Welcome to PLATO Education Platform</strong>
+            <p>PlatoEd Platform (referred to as PEP) provides a peer to peer, mobile- and web-based parent
+                 engagement platform. The focus is on engagement between parents, teachers, students, and administrators,
+                 providing an efficient and effective way to share news and information from a specific school or subscribed
+                 schools; send alerts and other urgent notifications; and create a connected community for the education market
+                (“Services”). The Services are provided through www.platoplatform.com (the “Website”) and a mobile app (the “Mobile App  ”).</p>
+            <strong>In these Terms of Use</strong>
+            <p>"PEP" and "we" mean PLATO Company Limited."You" and "parent" means a person who is under the age of 18 and is a member of or enrolled in an organization that uses Services.
+                A "Registered Member" is a parent who has registered for the Services(see the section below on "Registration").</p>
+            <strong>Terms of Use</strong>
+            <p>PLATO will change and update Terms of Use at any time by posting through our Website or Mobile App.
+                Each use of our Website or Mobile App is your confirmation that you agree with the most recent version of these Terms of Use</p>
+            <strong>Privacy Policy</strong>
+            <p>The Services are available only to members of an organization that has signed up with PLATO i.e.
+                 public or private school, school district school associations , club, or other community organization.
+                 When the organization signs up, it provides PLATO with information about its members or participants.To register,
+                a parent may access the Website online or download the Mobile App for iOS or Android mobile devices.
+                A parent must register with PLATO to have access to any Services. You must provide and update accurate,
+                 current, and complete information as prompted by the registration form. " +
+                PLATO reserves the right to terminate your use of our Services if any of the information provided by you is untrue,
+                 inaccurate, not current, or not complete. You will be asked to select a login name and password.
+                Your login name may not identify you as someone else or be illegal or objectionable.
+                You should keep your login name and password confidential. If you download the Mobile App to access the Services,
+                 PLATO may send notices, alerts, and other communications to your mobile device(s)."</p>
+            <strong>Use of the Services by Student</strong>
+            <p>Student cannot register for PLATO independently. Student can only use the Services if the associated school or educational group activates an account for Student .
+                If you authorize your Student to participate in forums, chat rooms, or other features that allow participants to post information,
+                you agree to allow your Student to post personal information through those features. </p>
+            <strong>Pricing</strong>
+            <p>The Mobile App can be downloaded free of charge and there is no charge for registration for parents or student.
+                Your mobile carrier’s message and data rates may apply and PLATO is not responsible for any such fees that you incur.
+                There is no fee for any of the basic Services at this time. If we add fees or offer optional goods or services for which there is a fee,
+                 we will notify you of the amount of the fee and of the circumstances under which it will be charged.</p>
+            <strong>Trademarks and Copyrights</strong>
+            <p>LATO’s name and logo and all other trademarks, service marks,
+                or trade dress associated with the Services are owned by PLATO or are used with the permission of a third party trademark owner.
+                All designs, web pages, and source code included in the Website or Mobile App are copyrighted or licensed by PLATO.
+                Material from the Website or Mobile App, including Content, may not be copied, distributed, republished, uploaded, posted,
+                or transmitted in any way without the prior written consent of PLATO.
+                Unauthorized use of any material on the Website or Mobile App or any PLATO or third-party trademarks is prohibited by law.</p>
+            <strong>Submissions and Communications</strong>
+            <p>PLATO may make message boards, blogs, forums, personalized pages, chat rooms and other features available to its users.
+                Any information, photos or videos disclosed in these public areas become public information. " +
+                You should exercise caution when disclosing your personal information or images. You will not upload or transmit any remarks,
+                comments, postings, submittals, suggestions, messages, ideas, photographs, graphics, images, photos, video, sound, information,
+                data, text, files, links, software, or other materials (\"User Content\") that:</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" class="btn btn-default" id="btn" onclick="do_register()">Register</button>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

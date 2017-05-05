@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+       window.onload = function () {
+           news_text_list = function (data) {
+               var news_template =' <div class="news_test row"><div class="col news-title">-sout-</div></div>\
+                                    <div class="news_test row"><div class="col news-date">-time-</div></div>\
+                                    <div class="news_test row"><div class="col news-tags">-description-</div></div>\
+                                    <div class="news_test row"><div class="col news-comment">-news-</div><hr></div>\
+                                    <div class="news_test row"><div class="col commentsSection">评论区(CommentsSection)</div><hr></div>\
+                                    <div class="news_test row"><div class="col"><form action=""><textarea rows="4" cols="180" id="textarea"></textarea><br><button type="button" id="btn">Submit</button></form></div></div> \
+                                    <div class="news_test row"><div class="col Paging" id="Paging"></div></div>\
+                                    <div class="news_test row"><div class="news-content" id="Comment">-Comment-</div></div>';
+               for(var id in data){
+                   for(var attr in data[id]){
+                       if(location.hash == "#"+data[id][attr].id ){
+                           var news_content = news_template;
+                           var new_content = document.createElement("div");
+                           news_content = news_content.replace("-sout-",data[id][attr].content.name);
+                           news_content = news_content.replace("-time-",data[id][attr].time);
+                           news_content = news_content.replace("-description-",data[id][attr].tags[0].name);
+                           var num=1;
+                           var str= "";
+
+                           //console.log(tsq.length);
+                           for( var comment_id in data[id][attr].comments.list){
+
+                               var tnt = data[id][attr].comments.list[comment_id].content;
+                               var tst = data[id][attr].comments.list[comment_id].created_at;
+                               var tot = data[id][attr].comments.list[comment_id].author.name.last;
+                               var tqt = data[id][attr].comments.list[comment_id].author.name.first;
+                               str= '<p class="comment_p">'+'<span class="num">'+ num++ + ':'+'</span>'
+                                       +tnt+'<span class="comment_span">'+tst+'<span class="name_comment">'
+                                       +'Name:'+'</span>'+'<span class="name_comment1">'
+                                       +tot+'</span>'+'<span class="name_comment2">'
+                                       +tqt+'</span>'+'</span>'+'</p>' +str;
+
+
+
+                           };
+
+                           news_content = news_content.replace("-Comment-",str);
+
+                           news_content = news_content.replace("-news-",data[id][attr].content.description);
+                           new_content.innerHTML = news_content;
+                           new_content.className = "col-sm-12";
+                           document.getElementById("news_text_list").appendChild(new_content);
+
+                           var op=document.getElementsByTagName('p');
+                           var oSpan=document.getElementsByTagName('span');
+                           var oText = document.getElementById("textarea");
+                           var oComment = document.getElementById("Comment");
+                           var oBtm = document.getElementById("btn");
+
+                           oBtm.onclick = function () {
+                               if(oText.value==''){
+                                   alert('Please input content')
+                               }else {
+                                   var date = new Date();
+                                   var year = date.getFullYear();
+                                   if(year<10)year='0'+year;
+                                   var month = date.getMonth()+1;
+                                   if(month<10)month='0'+month;
+                                   var day = date.getDate();
+                                   if(day<10)day='0'+day;
+                                   var hour = date.getHours();
+                                   if(hour<10) hour='0'+hour;
+                                   var minute = date.getMinutes();
+                                   if(minute<10) minute='0'+minute;
+                                   var second = date.getSeconds();
+                                   if(second<10) second='0'+second;
+                                   ap = document.createElement('p');
+                                   ap.className='comment_p';
+                                   aSpan = document.createElement('span');
+                                   aSpan.className='num';
+                                   aSpan.innerHTML=num++;
+                                   bSpan = document.createElement('span');
+                                   bSpan.innerHTML=oText.value;
+
+                                   cSpan = document.createElement('span');
+                                   cSpan.innerHTML=year+'-'+month+'-'+day+'-'+hour+':'+minute+':'+second;
+                                   cSpan.className='comment_span';
+
+                                   dSpan = document.createElement('span');
+                                   dSpan.innerHTML='Name';
+                                   dSpan.className='name_comment';
+
+                                   eSpan = document.createElement('span');
+                                   eSpan.className='name_comment1';
+                                   eSpan.innerHTML=tot;
+
+                                   fSpan = document.createElement('span');
+                                   fSpan.className='name_comment2';
+                                   fSpan.innerHTML=tqt;
+                                   if(op.length>0){
+                                       ap.appendChild(aSpan);
+                                       ap.appendChild(bSpan);
+                                       ap.appendChild(cSpan);
+                                       cSpan.appendChild(dSpan);
+                                       cSpan.appendChild(eSpan);
+                                       cSpan.appendChild(fSpan);
+                                       oComment.insertBefore(ap,op[0]);
+
+
+                                   }else {
+                                       oComment.appendChild(ap);
+                                       oComment.appendChild(aSpan);
+                                   }
+                                   var asser = location.hash.split("#");
+                                   var app_session = localStorage.getItem("app_session");
+                                   var http = new XMLHttpRequest();
+                                   var url = "http://mobile.platoplatform.com/app/comment/post";
+                                   var params ='session=' + app_session;
+
+                                   params += '&comment=' + oText.value;
+                                   params += '&id=' + asser[1];
+                                   params += '&type=' + 'programme_update';
+//                                   console.log(params);
+                                   //console.log("value:"+oText.value);
+                                   http.open("POST", url, true);
+                                   http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                   http.onreadystatechange = function () {//Call a function when the state changes.
+                                       if (http.readyState == 4 && http.status == 200) {
+                                           console.info('Post Comment Response', http.responseText);
+                                           var jsonResponse = JSON.parse(http.responseText);
+                                           if( jsonResponse.error > 0) {
+                                               alert('Post Failed');
+                                           } else {
+
+                                           }
+                                       }
+                                   };
+                                   http.send(params);
+//               post_Comment = function (comment){
+//                   if(oTextarea.value=='') {
+//                       alert('Please type comment.');
+//                   } else {
+//                       var app_session = localStorage.getItem("app_session");
+//                       var http = new XMLHttpRequest();
+//                       var url = "http://mobile.platoplatform.com/app/comment/post";
+//                       var params ='session=' + app_session;
+//
+//                       http.open("POST", url, true);
+//                       http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//                       http.onreadystatechange = function () {//Call a function when the state changes.
+//                           if (http.readyState == 4 && http.status == 200) {
+//                               //console.info('Post Comment Response', http.responseText);
+//                               var jsonResponse = JSON.parse(http.responseText);
+//                               if( jsonResponse.error > 0) {
+//                                   alert('Post Failed');
+//                               } else {
+//                               }
+//                           }
+//                       };
+//                       http.send(params);
+//                   }
+//               };
+                                   // 更新新闻内容
+                                   oText.value='';
+                               }
+                           };
+                       }
+                   }
+               }
+
+
+           };
+
+           getNews = function () {
+               var app_session = localStorage.getItem("app_session");
+               var http = new XMLHttpRequest();
+               var url = "http://mobile.platoplatform.com/app/news/list";
+               var params = 'session=' + app_session;
+               http.open("POST", url, true);
+               http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+               http.onreadystatechange = function () {//Call a function when the state changes.
+                   if (http.readyState == 4 && http.status == 200) {
+                       //console.info("News Response Text : " + http.responseText);
+                       var jsonResponse = JSON.parse(http.responseText);
+                       news_text_list(jsonResponse);
+                       localStorage.setItem("news_list", http.responseText);
+                   }
+               };
+               http.send(params);
+           }();
+
+       };
+
+    </script>
+</head>
+<body>
+        <div class="news-detail" id="news_text_list">
+            <!--<div class="row"><div class="col col-lg-offset-4 news-title">Our Malaysia Team is here.....exploring the enrolment</div></div>-->
+            <!--<div class="row"><div class="col col-lg-offset-4 news-date">Wed 07 Dec 2016 @ 12.00 AM</div></div>-->
+            <!--<div class="row"><div class="col col-lg-offset-4 news-tags">Plato Project News</div></div>-->
+            <!--<div class="row"><div class="col col-lg-offset-4 news-content">Our Malaysia Team is here.....exploring the enrolment of future unborn kids to school</div></div>-->
+            <!--<div class="row"><div class="col news-comments"><div class="col news-comment"></div></div></div>-->
+            <!--<div class="row"><div class="col col-lg-offset-4"><form action=""><textarea rows="8" cols="75" id="_textarea"></textarea><button type="button" class="btn" onclick="postComment()">Submit</button></form></div></div>-->
+        </div>
+</body>
+</html>

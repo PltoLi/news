@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        window.onload = function () {
+            var oUl=document.getElementsByTagName('ul')[1];
+            var title=document.getElementsByTagName('h4')[0];
+            var select=document.getElementsByTagName('select');
+            var toUp=document.getElementById('up');
+            var toDown=document.getElementById('down');
+            var toDay=document.getElementById('toDay');
+            var num=1;
+            var year1,month1;
+            var year2,month2;
+            run(num);
+            function run(n){
+                var all_day=0;//所有的天数
+                var f_week=0;//第一天是星期几？
+                var today=0;//今天
+                //找出必要的数据
+                var oDate=new Date();
+                today=oDate.getDate();//今天
+                //找第一天的星期几？？
+                year1=oDate.getFullYear();
+
+                //本月多少天？
+                month1=oDate.getMonth();
+                oDate.setMonth(month1+n,0);
+                year2=oDate.getFullYear();
+                month2=oDate.getMonth();
+                all_day=oDate.getDate();
+                oDate.setDate(1);
+                f_week=oDate.getDay();
+                //console.log(today,f_week,all_day,month1,month2,year1,year2);
+                //塞到1日星期之前的空白
+                if(f_week==0){
+                    f_week=7;
+                }
+                for(var i=1; i<f_week; i++){
+                    var li=document.createElement('li');
+                    oUl.appendChild(li);
+                }
+                for( var i=0; i<all_day; i++){
+                    var li=document.createElement('li');
+                    li.innerHTML=i+1;
+                    oUl.appendChild(li);
+                }
+                //所有的li
+                var aLi=oUl.children;
+                for(var i=0; i<aLi.length; i++){
+                    if((year1>=year2&&month1>=month2)||(year1>year2)){
+                        aLi[i].className="ccc";
+                    }else if(i%7==5 || i%7==6){
+                        aLi[i].className="sun";
+                    }
+                    if(year1==year2&&month1==month2&&aLi[i].innerHTML==today){
+                        aLi[i].className="red";
+                    }
+                    if(year1==year2&&month1==month2&&aLi[i].innerHTML>today){
+                        aLi[i].className="";
+                    }
+                    aLi[i].onclick = function () {
+//                    $scope.extraCalender(this.getAttribute("data-date"));
+                        for (var j = 0; j < aLi.length; j++) {
+                            aLi[j].className = '';
+                            aLi[j].style.background = "";
+                            this.style.background = "red";
+                            this.style.color = "#fff";
+                            aLi[j].style.background = "";
+                            aLi[j].style.color = "";
+                        }
+                    }
+                }
+                title.innerHTML=oDate.getFullYear()+'年'+(oDate.getMonth()+1)+'月';
+                for(var j=0;j<select[0].length;j++){
+                    if(select[0][j].innerHTML==year2){
+                        select[0][j].setAttribute("selected","selected");
+                    }else{
+                        select[0][j].removeAttribute("selected");
+                    }
+                }
+                for(var k=0;k<select[1].length;k++){
+                    if(select[1][k].innerHTML==month2+1){
+                        select[1][k].setAttribute("selected","selected");
+                    }else{
+                        select[1][k].removeAttribute("selected");
+                    }
+                }
+            }
+            var option1='';
+            for(var i=1 ;i<=12;i++){
+                if(i==month1+1){
+                    option1+='<option value='+i+' selected>'+i+'</option>';
+                }else{
+                    option1+='<option value='+i+'>'+i+'</option>';
+                }
+            }
+            select[1].innerHTML=option1;
+            var option2='';
+            for(var j=1970 ;j<=3020;j++){
+                if(j==year1){
+                    option2+='<option value='+j+' selected>'+j+'</option>';
+                }else{
+                    option2+='<option value='+j+'>'+j+'</option>';
+                }
+            }
+            select[0].innerHTML=option2;
+            toUp.onclick=function(){
+                oUl.innerHTML='';
+                num--;
+                run(num);
+            };
+            toDown.onclick=function(){
+                oUl.innerHTML='';
+                num++;
+                run(num);
+            };
+            toDay.onclick=function(){
+                oUl.innerHTML='';
+                num=1;
+                run(1);
+            };
+            select[1].onchange=function(){
+                oUl.innerHTML='';
+                var mm=select[1].value-month1;
+                var yy=(select[0].value-year1)*12;
+                num=mm+yy;
+                //console.log(select[0].value,select[1].value,year1,month1,mm,yy,interval);
+                run(num);
+            };
+            select[0].onchange=function(){
+                oUl.innerHTML='';
+                var mm=select[1].value-month1;
+                var yy=(select[0].value-year1)*12;
+                num=mm+yy;
+                //console.log(select[0].value,select[1].value,year1,month1,mm,yy,interval);
+                run(num);
+            };
+            new_clle = function (data) {
+
+                for(var id in data){
+                    for(var attr in data[id]){
+                        var news_template='<div class="new-template new_name">-name-</div>\
+                                        <div class="new-template new_time">-time-</div>\
+                                        <div class="new-template new_content">-content-</div>\
+                                        <div class="new-template new_description">-description-</div>\
+                                        <div class="news_test row" ><img class="news_images" class="news-images" src="-images-" height="100"><hr></div>\
+                                        <a class="new-template new_comment" href="news_comment.html#-id-">comment (-comment-)</a>';
+
+                        var news_content = news_template;
+                        var new_content = document.createElement("div");
+                        news_content = news_content.replace("-name-",data[id][attr].content.name);
+                        news_content = news_content.replace("-time-",data[id][attr].time);
+                        news_content = news_content.replace("-description-",data[id][attr].content.description);
+                        var img = '';
+                        for(var comment_img in data[id][attr].attachment.list){
+
+                            img+=data[id][attr].attachment.list[comment_img].path
+                        }
+
+                        if(img){
+                            news_content = news_content.replace("-images-",img);
+                        }
+                        news_content = news_content.replace("-images-",img);
+                        news_content = news_content.replace("-id-",data[id][attr].id);
+                        news_content = news_content.replace("-content-",data[id][attr].tags[0].name);
+                        news_content = news_content.replace("-comment-",data[id][attr].comments.count);
+                        new_content.innerHTML = news_content;
+                        new_content.className = "col-sm-12 list-group-item new_list";
+                        document.getElementById("new_list").appendChild(new_content);
+                    }
+                }
+            };
+
+            new_listll = function  (){
+                var app_session = localStorage.getItem("app_session");
+                //console.info("App Session : " + app_session);
+                var http = new XMLHttpRequest();
+                var url = "http://mobile.platoplatform.com/app/news/list";
+                var params = 'session=' + app_session;
+                http.open("POST", url, true);
+                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                http.onreadystatechange = function () {//Call a function when the state changes.
+                    if (http.readyState == 4 && http.status == 200) {
+                        //console.info("News Response Text : " + http.responseText);
+                        var jsonResponse = JSON.parse(http.responseText);
+                        new_clle(jsonResponse);
+                        localStorage.setItem("news_list", http.responseText);
+                    }
+                };
+                http.send(params);
+            }();
+
+        }
+    </script>
+</head>
+<body>
+    <div class="row" id="new_list">
+
+    </div>
+    <div class="box">
+        <div class="select"><select></select><select></select><a href="javascript:;" id="toDay">today</a></div>
+        <a href="javascript:;" id="up">Last month</a>
+        <a href="javascript:;" id="down">Next month</a>
+        <h4>2016年8月</h4>
+        <ul class="day_1">
+            <li>M</li>
+            <li>T</li>
+            <li>W</li>
+            <li>T</li>
+            <li>F</li>
+            <li>S</li>
+            <li>S</li>
+        </ul>
+        <ul class="day_2">
+        </ul>
+
+    </div>
+</body>
+</html>
